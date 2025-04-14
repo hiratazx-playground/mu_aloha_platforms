@@ -49,7 +49,7 @@ APRIORI DXE {
         INF FatPkg/EnhancedFatDxe/Fat.inf
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/TzDxe/TzDxeLA.inf
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/VariableDxe/VariableDxe.inf
-        INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/QcomWDogDxe/QcomWDogDxe.inf
+#        INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/QcomWDogDxe/QcomWDogDxe.inf
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/DDRInfoDxe/DDRInfoDxe.inf
         INF AndromedaPkg/Driver/SimpleFbDxe/SimpleFbDxe.inf
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/MbmPkg/Core/Drivers/MotStorageDxe/MotStorageDxe.inf
@@ -64,8 +64,17 @@ APRIORI DXE {
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/SPSSDxe/SPSSDxe.inf
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/CPRDxe/CPRDxe.inf
         INF MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
-        INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/ASN1X509Dxe/ASN1X509Dxe.inf
-        INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/SecRSADxe/SecRSADxe.inf
+
+        FILE DRIVER = C2F9A4F5-F7B4-43E7-BA99-5EA804CC103A {
+                SECTION PE32 = $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/ASN1X509Dxe/ASN1X509Dxe.efi
+                SECTION UI = "ASN1X509Dxe"
+        }
+
+        FILE DRIVER = 32C71E68-83A8-46ED-AED1-094E71B12057 {
+                SECTION PE32 = $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/SecRSADxe/SecRSADxe.efi
+                SECTION UI = "SecRSADxe"
+        }
+
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/VerifiedBootDxe/VerifiedBootDxe.inf
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/EmbeddedMonotonicCounter/EmbeddedMonotonicCounter.inf
         INF EmbeddedPkg/RealTimeClockRuntimeDxe/RealTimeClockRuntimeDxe.inf
@@ -107,12 +116,34 @@ APRIORI DXE {
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/UsbConfigDxe.inf
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/ButtonsDxe.inf
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/TsensDxe/TsensDxe.inf
-        INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/LimitsDxe/LimitsDxe.inf
+        
+        FILE DRIVER = F09AD92E-4E91-490F-AB99-E69939B840B2 {
+                SECTION PE32 = $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/LimitsDxe/LimitsDxe.efi
+                SECTION UI = "LimitsDxe"
+        }
+
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/GpiDxe/GpiDxe.inf
-        INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/HashDxe/HashDxe.inf
-        INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/CipherDxe/CipherDxe.inf
-        INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/MacDxe/MacDxe.inf
-        INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/RNGDxe/RngDxe.inf
+
+        FILE DRIVER = 3ADF8DDA-1850-44C5-8C63-BB991849BC6F {
+                SECTION PE32 = $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/HashDxe/HashDxe.efi
+                SECTION UI = "HashDxe"
+        }
+
+        FILE DRIVER = 5F0937CD-73F9-445E-B320-BB6FD5D3CBDE {
+                SECTION PE32 = $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/CipherDxe/CipherDxe.efi
+                SECTION UI = "CipherDxe"
+        }
+
+        FILE DRIVER = 20583A66-3C26-4D9E-9A8C-E2DFA2914015 {
+                SECTION PE32 = $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/MacDxe/MacDxe.efi
+                SECTION UI = "MacDxe"
+        }
+
+        FILE DRIVER = B0D3689E-11F8-43C6-8ECE-023A29CEC35B {
+                SECTION PE32 = $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/RNGDxe/RngDxe.efi
+                SECTION UI = "RngDxe"
+        }
+
         INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/SimpleTextInOutSerialDxe/SimpleTextInOutSerial.inf
         INF MdeModulePkg/Universal/Console/ConPlatformDxe/ConPlatformDxe.inf
         INF MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
