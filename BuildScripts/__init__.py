@@ -1,8 +1,14 @@
 import importlib
+import logging
 import os
 import sys
 
-sys.exit = lambda code:print(code)
+
+def sys_exit(code):
+    del logging.root
+    logging.root = logging.RootLogger(logging.WARNING)
+    print(code)
+sys.exit = sys_exit
 from argparse import Namespace
 banner = r"""Invoking Stuart
      ) _     _
