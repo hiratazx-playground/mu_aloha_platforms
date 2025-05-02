@@ -234,7 +234,7 @@ def ci_copy_fd_after_single_device_building(this_target):
     input_fd_path = os.path.join(build_output_path, this_target.buildtype + "_CLANGPDB", "FV",
                                  this_target.platform.upper() + "_EFI.fd")
     input_img_path = os.path.join(build_output_path, f"{this_target.device}.img")
-    output_fd_path = os.path.join(ci_upload_dir, f"{this_target.platform.upper}_EFI_{secureboot_suffix}.fd")
+    output_fd_path = os.path.join(ci_upload_dir, f"{this_target.platform.upper()}_EFI_{secureboot_suffix}.fd")
     output_img_path = os.path.join(ci_upload_dir, f"{this_target.device}_{secureboot_suffix}.img")
 
     # Create output directory

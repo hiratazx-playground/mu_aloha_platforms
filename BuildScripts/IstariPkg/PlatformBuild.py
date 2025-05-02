@@ -13,7 +13,7 @@ from BuildScripts import mkbootimg
 SiliconName = "Msm8996"
 PlatformName = "Istari"
 PackageName = f"{PlatformName}Pkg"
-SecureBoot = True
+SecureBoot = False
 ## woa-msmnile patch end
 
 from edk2toolext.environment import shell_environment

@@ -12,8 +12,8 @@ from BuildScripts import mkbootimg
 ## woa-msmnile patch start
 SiliconName = "Sm8250"
 PlatformName = "Kona"
-PackageName = PlatformName+"Pkg"
-SecureBoot = True
+PackageName = f"{PlatformName}Pkg"
+SecureBoot = False
 ## woa-msmnile patch end
 
 from edk2toolext.environment import shell_environment
@@ -183,7 +183,7 @@ class SettingsManager(UpdateSettingsManager, SetupSettingsManager, PrEvalSetting
         The tuple should be (<workspace relative path to dsc file>, <input dictionary of dsc key value pairs>)
         '''
 ## woa-msmnile patch start
-        return PackageName + "/" + PlatformName + f"{'NoSb' if not SecureBoot else ''}.dsc", {}
+        return f"{PackageName}/{PlatformName}{'NoSb' if not SecureBoot else ''}.dsc", {}
 
     def GetName(self):
         return PackageName

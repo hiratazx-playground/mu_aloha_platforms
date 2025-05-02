@@ -13,8 +13,8 @@ from BuildScripts import mkbootimg
 ## woa-msmnile patch start
 SiliconName = "Sm8150"
 PlatformName = "SurfaceDuo1"
-PackageName = PlatformName+"Pkg"
-SecureBoot = True
+PackageName = f"{PlatformName}Pkg"
+SecureBoot = False
 ## woa-msmnile patch end
 
 from edk2toolext.environment import shell_environment

@@ -13,8 +13,8 @@ from BuildScripts import mkbootimg
 ## woa-msmnile patch start
 SiliconName = "Sm7125"
 PlatformName = "Rennell"
-PackageName = PlatformName+"Pkg"
-SecureBoot = True
+PackageName = f"{PlatformName}Pkg"
+SecureBoot = False
 ## woa-msmnile patch end
 
 from edk2toolext.environment import shell_environment
@@ -146,7 +146,7 @@ class SettingsManager(UpdateSettingsManager, SetupSettingsManager, PrEvalSetting
         '''
         unsupported = set(list_of_requested_architectures) - \
             set(self.GetArchitecturesSupported())
-        if(len(unsupported) > 0):
+        if len(unsupported) > 0:
             errorString = (
                 "Unsupported Architecture Requested: " + " ".join(unsupported))
             logging.critical( errorString )
@@ -188,7 +188,7 @@ class SettingsManager(UpdateSettingsManager, SetupSettingsManager, PrEvalSetting
         The tuple should be (<workspace relative path to dsc file>, <input dictionary of dsc key value pairs>)
         '''
 ## woa-msmnile patch start
-        return (PackageName+"/"+PlatformName+f"{'NoSb' if not SecureBoot else ''}.dsc", {})
+        return f"{PackageName}/{PlatformName}{'NoSb' if not SecureBoot else ''}.dsc", {}
 
     def GetName(self):
         return PackageName
@@ -253,7 +253,7 @@ class PlatformBuilder(UefiBuilder, BuildSettingsManager):
         ''' Return the name of device's dtb '''
         target_device = self.env.GetValue("TARGET_DEVICE")
         linenum = target_device.find('-') + 1
-        dtbname = target_device[(linenum):] + '.dtb'
+        dtbname = target_device[linenum:] + '.dtb'
         return dtbname
 ## woa-msmnile patch end
 
@@ -325,4 +325,3 @@ class PlatformBuilder(UefiBuilder, BuildSettingsManager):
 
     def FlashRomImage(self):
         return 0
-

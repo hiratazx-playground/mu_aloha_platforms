@@ -13,8 +13,8 @@ from BuildScripts import mkbootimg
 ## woa-msmnile patch start
 SiliconName = "Msm8998"
 PlatformName = "Nazgul"
-PackageName = PlatformName+"Pkg"
-SecureBoot = True
+PackageName = f"{PlatformName}Pkg"
+SecureBoot = False
 ## woa-msmnile patch end
 
 from edk2toolext.environment import shell_environment
@@ -57,7 +57,7 @@ def makeAndroidImage(outputbin_dir, output_dir, root_dir, device_name, dtb_name)
             f.write(data)
 
 
-    logging.info("Writing " + device_name + '.img')
+    logging.info(f"Writing {device_name}.img")
 
     mkbootimg.main([
         "--kernel", bootpayload_path,
