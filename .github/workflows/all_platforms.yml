@@ -52,7 +52,7 @@ jobs:
 
       - id: matrix
         run: |
-          echo "value=[$(find ./BuildScripts -maxdepth 1 -type d -exec test -f '{}'/PlatformBuild.py -a -f '{}'/PlatformBuildNoSb.py \; -printf "\"%f\", ")]" >> $GITHUB_OUTPUT
+          echo "value=[$(find ./BuildScripts -maxdepth 1 -type d -exec test -f '{}'/PlatformBuild.py  \; -printf "\"%f\", ")]" >> $GITHUB_OUTPUT
 
   build:
     strategy:
