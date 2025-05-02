@@ -7,7 +7,7 @@
 import logging
 import os
 
-from Platforms.PythonPkg import mkbootimg
+from BuildScripts import mkbootimg
 
 ## woa-msmnile patch start
 SiliconName = "Sm8350"
