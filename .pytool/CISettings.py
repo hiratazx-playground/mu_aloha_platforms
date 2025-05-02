@@ -41,15 +41,15 @@ class Settings(CiSetupSettingsManager, CiBuildSettingsManager, UpdateSettingsMan
         ''' return iterable of edk2 packages supported by this build.
         These should be edk2 workspace relative paths '''
 
-        return ("SurfaceDuo1Pkg","SurfaceDuo2Pkg")
+        return "SurfaceDuo1Pkg", "SurfaceDuo2Pkg"
 
     def GetArchitecturesSupported(self):
         ''' return iterable of edk2 architectures supported by this build '''
-        return ("AARCH64")
+        return "AARCH64"
 
     def GetTargetsSupported(self):
         ''' return iterable of edk2 target tags supported by this build '''
-        return ("DEBUG", "RELEASE", "NO-TARGET", "NOOPT")
+        return "DEBUG", "RELEASE", "NO-TARGET", "NOOPT"
 
     # ####################################################################################### #
     #                     Verify and Save requested Ci Build Config                           #
@@ -63,7 +63,7 @@ class Settings(CiSetupSettingsManager, CiBuildSettingsManager, UpdateSettingsMan
         '''
         unsupported = set(list_of_requested_packages) - \
             set(self.GetPackagesSupported())
-        if(len(unsupported) > 0):
+        if len(unsupported) > 0:
             logging.critical(
                 "Unsupported Package Requested: " + " ".join(unsupported))
             raise Exception("Unsupported Package Requested: " +
@@ -78,7 +78,7 @@ class Settings(CiSetupSettingsManager, CiBuildSettingsManager, UpdateSettingsMan
         '''
         unsupported = set(list_of_requested_architectures) - \
             set(self.GetArchitecturesSupported())
-        if(len(unsupported) > 0):
+        if len(unsupported) > 0:
             logging.critical(
                 "Unsupported Architecture Requested: " + " ".join(unsupported))
             raise Exception(
@@ -93,7 +93,7 @@ class Settings(CiSetupSettingsManager, CiBuildSettingsManager, UpdateSettingsMan
         '''
         unsupported = set(list_of_requested_target) - \
             set(self.GetTargetsSupported())
-        if(len(unsupported) > 0):
+        if len(unsupported) > 0:
             logging.critical(
                 "Unsupported Targets Requested: " + " ".join(unsupported))
             raise Exception("Unsupported Targets Requested: " +

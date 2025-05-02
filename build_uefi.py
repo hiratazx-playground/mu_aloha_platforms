@@ -9,11 +9,13 @@
 
 # TODO Port to windows if possible.
 import argparse
-import os,sys
+import os, sys
 import shutil
 import json
-import Levenshtein
+import subprocess
 
+import Levenshtein
+import BuildScripts
 
 class Target:
     def __init__(self, device, platform, package, bootshim_uefi_base, bootshim_uefi_size, secureboot, buildtype):
@@ -26,15 +28,14 @@ class Target:
         self.buildtype = buildtype
 
         if self.secureboot is None:
-            self.secureboot = 0;
+            self.secureboot = 0
 
         if self.buildtype is None:
-            self.buildtype = "RELEASE";
-
-        if self.buildtype != "RELEASE" and self.buildtype != "DEBUG":
-            print(f"Unknown build type \"{self.buildtype}\", change to RELEASE by default.")
             self.buildtype = "RELEASE"
 
+        if self.buildtype not in ["RELEASE", "DEBUG"]:
+            print(f"Unknown build type \"{self.buildtype}\", change to RELEASE by default.")
+            self.buildtype = "RELEASE"
 
     def merge(self, target_b):
         if self.device is None:
@@ -52,7 +53,6 @@ class Target:
         if self.bootshim_uefi_size is None:
             self.bootshim_uefi_size = target_b.bootshim_uefi_size
 
-
     def print_content(self):
         print("Target Info: ")
         print("device", self.device)
@@ -65,20 +65,57 @@ class Target:
 def is_system_supported():
     return os.name == "posix"
 
+def call(exec_cmd:list):
+    conf = subprocess.CREATE_NO_WINDOW if os.name != 'posix' else 0
+    try:
+        ret = subprocess.Popen(exec_cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                               stderr=subprocess.STDOUT, creationflags=conf)
+        for i in iter(ret.stdout.readline, b""):
+            try:
+                out_put = i.decode("utf-8").strip()
+            except (Exception, BaseException):
+                out_put = i.decode("gbk").strip()
+            print(out_put)
+    except subprocess.CalledProcessError as e:
+        for i in iter(e.stdout.readline, b""):
+            try:
+                out_put = i.decode("utf-8").strip()
+            except (Exception, BaseException):
+                out_put = i.decode("gbk").strip()
+            print(out_put)
+        return 2
+    except FileNotFoundError:
+        return 2
+    ret.wait()
+    return ret.returncode
+
+def build_boot_shim(base:int=None, size:int=None):
+    if isinstance(base, str):
+        base = int(base, 16)
+    if isinstance(size, str):
+        size = int(size, 16)
+    print(hex(base).upper(), hex(size).upper())
+    if base is None or size is None:
+        base = 0x9FC00000
+        size = 0x00300000
+    target = "aarch64-linux-gnu"
+    cross_compile = f"{target}-"
+    cc = cross_compile + 'gcc'
+    objcopy = cross_compile + "objcopy"
+    for f in ['BootShim/BootShim.elf', "BootShim/BootShim.bin"]:
+        if os.path.exists(f):
+            os.remove(f)
+    call([cc, '-c', 'BootShim/BootShim.S', '-o', 'BootShim/BootShim.elf', f"-DUEFI_BASE={hex(base).upper()}", f"-DUEFI_SIZE={hex(size).upper()}"])
+    call([objcopy, '-O', 'binary', 'BootShim/BootShim.elf', "BootShim/BootShim.bin"])
+
 
 def build_bootshim(this_target):
-    bootshim_cmd = os.path.abspath("build_boot_shim.sh") + " -a " + str(this_target.bootshim_uefi_base) + " -b " + str(
-        this_target.bootshim_uefi_size)
-    return os.system(bootshim_cmd)
+    return build_boot_shim(this_target.bootshim_uefi_base, this_target.bootshim_uefi_size)
 
 
 def prepare_build(buildtype, package_name):
-    stuart_setup_cmd = "python3 " + os.path.join("Platforms", package_name,
-                                                         "PlatformBuild.py") + " --setup -t " + buildtype
-    stuart_update_cmd = "python3 " + os.path.join("Platforms", package_name,
-                                                          "PlatformBuild.py") + " --update -t " + buildtype
-    os.system(stuart_setup_cmd)
-    os.system(stuart_update_cmd)
+    BuildScripts.prepare_build(buildtype, package_name, True, False)
+    BuildScripts.prepare_build(buildtype, package_name, False, True)
 
 
 def get_devices_list(package_name):
@@ -98,7 +135,7 @@ def check_args(this_target):
     link_msg = "See \033[32mhttps://github.com/project-aloha/mu_aloha_platforms#target-list\033[0m for all available devices."
 
     if this_target.platform is not None and this_target.package is not None:
-        current_platform_msg = "\033[33mCurrent platform: " + this_target.platform + "\033[0m"
+        current_platform_msg = f"\033[33mCurrent platform: {this_target.platform}\033[0m"
         available_devices_list = get_devices_list(this_target.package)
 
         # check if target_device illegal
@@ -114,11 +151,11 @@ def check_args(this_target):
             print(available_devices_msg)
             print(current_platform_msg)
             for this_device in available_devices_list:
-                print("\t" + this_device)
+                print(f"\t{this_device}")
             if this_target.device is None:
                 print("\nPlease provide target device.")
             else:
-                print("\nThe target device \033[1;33;41m" + this_target.device + "\033[0m is not supported.")
+                print(f"\nThe target device \033[1;33;41m{this_target.device}\033[0m is not supported.")
             exit(link_msg)
 
     elif this_target.package is None:  # if package == None, that means parse failed before,
@@ -126,7 +163,7 @@ def check_args(this_target):
         print(usage)
         print(available_platforms_msg)
         for this_platform in available_platforms_list:
-            print("\t" + this_platform)
+            print(f"\t{this_platform}")
         exit(link_msg)
     print()
 
@@ -141,10 +178,10 @@ def device_error_exit(device_name, possible_devices_list):
         print(help_msg)
         print(not_found_msg)
     else:
-        possible_devices_msg = "Target device \033[31m" + device_name + "\033[0m not found, did you mean: "
+        possible_devices_msg = f"Target device \033[31m{device_name}\033[0m not found, did you mean: "
         print(possible_devices_msg)
         for dev_name in possible_devices_list:
-            print('\t' + dev_name)
+            print(f'\t{dev_name}')
     print()
     print(link_msg)
     exit()
@@ -173,33 +210,15 @@ def build_device(this_target):
     # if CI mode enabled, copy .FD and .img into CI upload directory.
     if os.getenv("WM_CI_BUILD") == "true":
         print("Buiding in CI...")
-
-        # In CI Environment, we build SB and NOSB at same time, build SB here.
+        BuildScripts.build(this_target.buildtype, this_target.device, this_target.package, True)
         this_target.secureboot = 1
-        os.system("python3 " + os.path.join("Platforms", this_target.package, "PlatformBuild.py")
-              + " TARGET=" + this_target.buildtype + " TARGET_DEVICE=" + this_target.device)
-
-        # Copy build SB output into ci upload dir.
         ci_copy_fd_after_single_device_building(this_target)
-
-        # Move secureboot status back.
+        BuildScripts.build(this_target.buildtype, this_target.device, this_target.package, False)
         this_target.secureboot = 0
-
-        # Now build NOSB
-        os.system("python3 " + os.path.join("Platforms", this_target.package, "PlatformBuildNoSb.py")
-              + " TARGET=" + this_target.buildtype + " TARGET_DEVICE=" + this_target.device)
-        
-        # Copy build NOSB output into ci upload dir.
         ci_copy_fd_after_single_device_building(this_target)
     else:
-        if this_target.secureboot == 1:
-            # Start Actual Build
-            os.system("python3 " + os.path.join("Platforms", this_target.package, "PlatformBuild.py")
-              + " TARGET=" + this_target.buildtype + " TARGET_DEVICE=" + this_target.device)
-        else:
-            # Start Actual Build
-            os.system("python3 " + os.path.join("Platforms", this_target.package, "PlatformBuildNoSb.py")
-              + " TARGET=" + this_target.buildtype + " TARGET_DEVICE=" + this_target.device)
+        BuildScripts.build(this_target.buildtype, this_target.device, this_target.package, this_target.secureboot == 1)
+
 
 
 def ci_copy_fd_after_single_device_building(this_target):
@@ -212,10 +231,11 @@ def ci_copy_fd_after_single_device_building(this_target):
     ci_upload_dir = os.path.join(build_output_path, "ci_artifacts", this_target.device)
 
     # File paths, fd and img
-    input_fd_path = os.path.join(build_output_path, this_target.buildtype + "_CLANGPDB", "FV", this_target.platform.upper() + "_EFI.fd")
-    input_img_path = os.path.join(build_output_path, this_target.device + ".img")
-    output_fd_path = os.path.join(ci_upload_dir, this_target.platform.upper() + "_EFI_" + secureboot_suffix + ".fd")
-    output_img_path = os.path.join(ci_upload_dir, this_target.device + "_" + secureboot_suffix + ".img")
+    input_fd_path = os.path.join(build_output_path, this_target.buildtype + "_CLANGPDB", "FV",
+                                 this_target.platform.upper() + "_EFI.fd")
+    input_img_path = os.path.join(build_output_path, f"{this_target.device}.img")
+    output_fd_path = os.path.join(ci_upload_dir, f"{this_target.platform.upper}_EFI_{secureboot_suffix}.fd")
+    output_img_path = os.path.join(ci_upload_dir, f"{this_target.device}_{secureboot_suffix}.img")
 
     # Create output directory
     os.makedirs(ci_upload_dir, exist_ok=True)
@@ -314,9 +334,8 @@ def get_all_target(this_all_targets):
     config_list = os.listdir(config_dir)
     for this_config in config_list:
         if this_config[-5:] == ".json":
-            pfile = open(os.path.join(config_dir, this_config), "r")
-            this_all_targets.append(parse_cfg(pfile))
-            pfile.close()
+            with open(os.path.join(config_dir, this_config), "r") as pfile:
+                this_all_targets.append(parse_cfg(pfile))
 
 
 # main
@@ -353,7 +372,7 @@ if __name__ == '__main__':
 
     # Build all devices in one platform
     if current_target.platform == "all":
-        build_all_platforms(all_targets)    # Commonly we use this in CI.
+        build_all_platforms(all_targets)  # Commonly we use this in CI.
     elif current_target.device == "all":
         # Find current target from config and merge.
         for the_target in all_targets:
