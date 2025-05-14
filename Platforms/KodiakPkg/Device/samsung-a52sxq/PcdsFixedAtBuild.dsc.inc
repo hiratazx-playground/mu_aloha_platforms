@@ -15,3 +15,6 @@ gAndromedaPkgTokenSpaceGuid.PcdABLProduct|"a52sxq"
 # Display Caller
 #gAndromedaPkgTokenSpaceGuid.PcdDisplayCallerExitDisableDisplay|FALSE
 #gAndromedaPkgTokenSpaceGuid.PcdDisplayCallerStallBeforeEnable|0
+
+# Storage
+gAndromedaPkgTokenSpaceGuid.PcdStorageHasUFS3|0

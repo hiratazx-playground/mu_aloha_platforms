@@ -37,6 +37,7 @@
 
 [FixedPcd]
   gArmPlatformTokenSpaceGuid.PcdClusterCount
+  gAndromedaPkgTokenSpaceGuid.PcdStorageHasUFS3
 
 [Protocols]
   gEfiChipInfoProtocolGuid                      ## CONSUMES
