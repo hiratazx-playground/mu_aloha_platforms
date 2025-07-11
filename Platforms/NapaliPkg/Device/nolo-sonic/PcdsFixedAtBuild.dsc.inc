@@ -1,0 +1,9 @@
+[PcdsFixedAtBuild.common]
+gAndromedaPkgTokenSpaceGuid.PcdMipiFrameBufferWidth|2160
+gAndromedaPkgTokenSpaceGuid.PcdMipiFrameBufferHeight|3840
+
+# Smbios Info
+gAndromedaPkgTokenSpaceGuid.PcdSmbiosSystemBrand|"nolo"
+gAndromedaPkgTokenSpaceGuid.PcdSmbiosSystemModel|"Sonic"
+gAndromedaPkgTokenSpaceGuid.PcdSmbiosSystemRetailModel|"Sonic"
+gAndromedaPkgTokenSpaceGuid.PcdSmbiosSystemRetailSku|"MP"

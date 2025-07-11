@@ -115,6 +115,18 @@ sudo docker run -v $(pwd):/build/ -it mu:v1
 | OnePlus 6                            | oneplus-enchilada      | ✅              | [Daniel224455](https://github.com/Daniel224455)    |
 
 
+#### XiaoMi Devices
+
+| Device                               | Target name            | DSDT Support    | Maintainers                                        |
+|--------------------------------------|------------------------|-----------------|----------------------------------------------------|
+| Xiaomi MIX 2S                        | xiaomi-polaris         | ❌              |                                                    |
+
+#### nolo Devices
+
+| Device                               | Target name            | DSDT Support    | Maintainers                                        |
+|--------------------------------------|------------------------|-----------------|----------------------------------------------------|
+| nolo Sonic                           | nolo-sonic             | ❌              |                                                    |
+
 ### Snapdragon 855/855+/860 (*SM8150*)
 
 #### Qualcomm Technologies, Inc. Devices

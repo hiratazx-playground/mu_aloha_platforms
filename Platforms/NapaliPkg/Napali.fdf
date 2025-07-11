@@ -21,11 +21,11 @@
 ################################################################################
 
 [FD.SDM845_EFI]
-BaseAddress   = 0xCE000000|gArmTokenSpaceGuid.PcdFdBaseAddress #The base address of the FLASH Device.
-Size          = 0x02000000|gArmTokenSpaceGuid.PcdFdSize        #The size in bytes of the FLASH Device
+BaseAddress   = 0x9FC00000|gArmTokenSpaceGuid.PcdFdBaseAddress #The base address of the FLASH Device.
+Size          = 0x00300000|gArmTokenSpaceGuid.PcdFdSize        #The size in bytes of the FLASH Device
 ErasePolarity = 1
-BlockSize     = 0x2000
-NumBlocks     = 0x1000
+BlockSize     = 0x1000
+NumBlocks     = 0x300
 
 ################################################################################
 #
