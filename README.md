@@ -1,4 +1,4 @@
-## This Repo Is Based On [mu_andromeda_platforms](https://github.com/WOA-Project/mu_andromeda_platforms/)
+## This Repo Is Based On [mu_andromeda_platforms](https://github.com/WOA-Project/mu_andromeda_platforms/) and [mu_aloha_platforms](https://github.com/Project-Aloha/mu_aloha_platforms)
 
 ### Thanks for [Gustave](https://github.com/gus33000)'s instructions!
 
